@@ -1,0 +1,50 @@
+swagger: "2.0"
+info:
+  description: "This is a sample specification for login service"
+  version: "1.0.0"
+  title: "Login Service contract"
+tags:
+  - name: "login"
+paths:
+  /login:
+    post:
+      tags:
+        - "login"
+      summary: "Requests login"
+      operationId: "requestLogin"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "request"
+          description: "The login request user data"
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          description: "User successfully logged in"
+          schema:
+            $ref: "#/definitions/LoginResult"
+        400:
+          description: "Validation error"
+definitions:
+  LoginResult:
+    type: "object"
+    properties:
+      valid:
+        type: "boolean"
+      token:
+        type: "string"
+      errorMessage:
+        type: "string"
+  LoginRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      admin:
+        type: "boolean"
+
