@@ -1,0 +1,7 @@
+{
+  "configPackage": "pl.edu.agh.papaya.api.configuration",
+  "modelPackage": "pl.edu.agh.papaya.api.model",
+  "apiPackage": "pl.edu.agh.papaya.api.service",
+  "invokerPackage": "pl.edu.agh.papaya.api",
+  "interfaceOnly": "true"
+}
