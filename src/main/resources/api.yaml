@@ -47,8 +47,5 @@ definitions:
     properties:
       username:
         type: string
-      admin:
-        type: boolean
     required:
       - username
-      - admin
