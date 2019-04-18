@@ -49,3 +49,17 @@ definitions:
         type: string
     required:
       - username
+  SprintState:
+    type: string
+    enum:
+      - upcoming
+      - declarable
+      - padding
+      - in_progress
+      - finished
+      - closed
+  UserStatus:
+    type: string
+    enum:
+      - admin
+      - member
