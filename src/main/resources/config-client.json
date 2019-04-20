@@ -2,5 +2,6 @@
   "configPackage": "pl.edu.agh.papaya.api.client.configuration",
   "modelPackage": "pl.edu.agh.papaya.api.client.model",
   "apiPackage": "pl.edu.agh.papaya.api.client.service",
-  "invokerPackage": "pl.edu.agh.papaya.api.client"
+  "invokerPackage": "pl.edu.agh.papaya.api.client",
+  "dateLibrary": "java8-localdatetime"
 }

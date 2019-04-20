@@ -53,6 +53,11 @@ swaggerSources {
     }
 }
 
+/* The swagger validation step is skipped due to an issue with enum references - despite them being utilized correctly 
+   by the swagger code generation task */
+validateSwaggerPapaya.enabled = false
+validateSwaggerPapayaClient.enabled = false
+
 sourceSets.main.java.srcDirs += "${swaggerSources.papaya.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDirs += "${swaggerSources.papaya.code.outputDir}/src/main/resources"
 sourceSets.main.java.srcDirs += "${swaggerSources.papayaClient.code.outputDir}/src/main/java"

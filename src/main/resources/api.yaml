@@ -2,8 +2,6 @@ swagger: '2.0'
 info:
   title: Papaya REST API
   version: 1.0.0
-tags:
-  - name: login
 paths:
   /login:
     post:
@@ -89,6 +87,38 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
+  /projects/{id}/sprints:
+    get:
+      tags:
+        - projects
+        - sprints
+      summary: Obtains sprints from a project by their state
+      operationId: getSprints
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: query
+          name: sprintStates
+          type: array
+          items:
+            $ref: '#/definitions/SprintStateDto'
+          required: false
+          description: The queried states - in case of an empty array all sprints are returned
+      responses:
+        200:
+          description: List of sprints with the requested state
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SprintDto'
 definitions:
   LoginResult:
     type: object
@@ -108,7 +138,7 @@ definitions:
         type: string
     required:
       - username
-  SprintState:
+  SprintStateDto:
     type: string
     enum:
       - upcoming
@@ -139,3 +169,41 @@ definitions:
       - name
       - description
       - initialCoefficient
+  LocalDateTimePeriodDto:
+    type: object
+    properties:
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+    required:
+      - start
+      - end
+  SprintDto:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      enrollmentPeriod:
+        $ref: '#/definitions/LocalDateTimePeriodDto'
+      durationPeriod:
+        $ref: '#/definitions/LocalDateTimePeriodDto'
+      dateClosed:
+        type: string
+        format: date-time
+      timeBurned:
+        description: The amount of time burned throughout the sprint (in minutes)
+        type: integer
+        format: int64
+      timePlanned:
+        description: The amount of time planned for the sprint (in minutes)
+        type: integer
+        format: int64
+      sprintState:
+        $ref: '#/definitions/SprintStateDto'
+    required:
+      - enrollmentPeriod
+      - durationPeriod
