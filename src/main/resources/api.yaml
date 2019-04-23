@@ -1,8 +1,7 @@
 swagger: '2.0'
 info:
-  description: This is a sample specification for login service
+  title: Papaya REST API
   version: 1.0.0
-  title: Login Service contract
 tags:
   - name: login
 paths:
@@ -30,6 +29,66 @@ paths:
             $ref: '#/definitions/LoginResult'
         400:
           description: Validation error
+  /projects:
+    get:
+      tags:
+        - projects
+      summary: Retrieves a list of the current user's projects
+      operationId: getProjects
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Projects retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProjectDto'
+    post:
+      tags:
+        - projects
+      summary: Creates a new project
+      operationId: addProject
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: request
+          description: The project
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectDto'
+      responses:
+        201:
+          description: Project created successfully
+          schema:
+            $ref: '#/definitions/ProjectDto'
+  /projects/{id}:
+    get:
+      tags:
+        - projects
+      summary: Retrieves a project by its ID
+      operationId: getProjectById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Project ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Project retrieved successfully
+          schema:
+            $ref: '#/definitions/ProjectDto'
+        403:
+          description: User is not authorized
+        404:
+          description: Project not found
 definitions:
   LoginResult:
     type: object
@@ -63,3 +122,20 @@ definitions:
     enum:
       - admin
       - member
+  ProjectDto:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      initialCoefficient:
+        type: number
+        format: double
+    required:
+      - name
+      - description
+      - initialCoefficient
