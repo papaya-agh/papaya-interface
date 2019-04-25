@@ -3,5 +3,6 @@
   "modelPackage": "pl.edu.agh.papaya.api.model",
   "apiPackage": "pl.edu.agh.papaya.api.service",
   "invokerPackage": "pl.edu.agh.papaya.api",
-  "interfaceOnly": "true"
+  "interfaceOnly": "true",
+  "dateLibrary": "java8-localdatetime"
 }
