@@ -27,6 +27,7 @@ paths:
             $ref: '#/definitions/LoginResult'
         400:
           description: Validation error
+
   /projects:
     get:
       tags:
@@ -42,6 +43,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ProjectDto'
+
     post:
       tags:
         - projects
@@ -63,6 +65,7 @@ paths:
           description: Project created successfully
           schema:
             $ref: '#/definitions/ProjectDto'
+
   /projects/{id}:
     get:
       tags:
@@ -87,6 +90,7 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
+
   /projects/{projectId}/sprints:
     get:
       tags:
@@ -119,6 +123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SprintDto'
+
     post:
       tags:
         - projects
@@ -147,6 +152,71 @@ paths:
           description: Sprint created succesfully
           schema:
             $ref: '#/definitions/SprintDto'
+
+  /projects/{projectId}/sprints/{sprintId}/availability:
+    get:
+      tags:
+        - projects
+        - sprints
+      summary: Obtains user's availability for specified sprint in specified project
+      operationId: getUserAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: projectId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the sprint
+      responses:
+        200:
+          description: User's availability for specified sprint in specified project
+          schema:
+            $ref: '#/definitions/AvailabilityDto'
+
+    put:
+      tags:
+        - projects
+        - sprints
+      summary: Updates user's availability for specified sprint in specified project
+      operationId: updateUserAvailability
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: projectId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the sprint
+        - in: body
+          name: userAvailability
+          schema:
+            $ref: '#/definitions/AvailabilityDto'
+          required: true
+          description: Availability filled by user
+      responses:
+        200:
+          description: User's availability for specified sprint in specified project
+          schema:
+            $ref: '#/definitions/AvailabilityDto'
+
+
 definitions:
   LoginResult:
     type: object
@@ -159,6 +229,7 @@ definitions:
         type: string
     required:
       - valid
+
   LoginRequest:
     type: object
     properties:
@@ -166,6 +237,7 @@ definitions:
         type: string
     required:
       - username
+
   SprintStateDto:
     type: string
     enum:
@@ -175,11 +247,13 @@ definitions:
       - in_progress
       - finished
       - closed
+
   UserStatus:
     type: string
     enum:
       - admin
       - member
+
   ProjectDto:
     type: object
     properties:
@@ -197,6 +271,7 @@ definitions:
       - name
       - description
       - initialCoefficient
+
   LocalDateTimePeriodDto:
     type: object
     properties:
@@ -209,6 +284,7 @@ definitions:
     required:
       - start
       - end
+
   SprintDto:
     type: object
     properties:
@@ -235,3 +311,23 @@ definitions:
     required:
       - enrollmentPeriod
       - durationPeriod
+
+  AvailabilityDto:
+    type: object
+    properties:
+      userId:
+        type: integer
+        format: int64
+      timeAvailable:
+        type: integer
+        format: int64
+        description: In minutes
+      timeRemaining:
+        type: integer
+        format: int64
+        description: In minutes
+      notes:
+        type: string
+    required:
+      - timeAvailable
+      - timeRemaining
