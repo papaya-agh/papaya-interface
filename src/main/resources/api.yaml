@@ -119,6 +119,42 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SprintDto'
+  /projects/{id}/sprints/{id}:
+    put:
+      tags:
+        - projects
+        - sprints
+      summary: Applies an action to a sprint
+      operationId: applyActionToSprint
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: projectId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the sprint
+        - in: query
+          name: sprintPatch
+          type: array
+          items:
+            $ref: '#/definitions/SprintAction'
+          required: false
+          description: Action to be performed
+      responses:
+        200:
+          description: Action performed successfully
+          schema:
+            $ref: '#/definitions/SprintDto'
 definitions:
   LoginResult:
     type: object
@@ -207,3 +243,18 @@ definitions:
     required:
       - enrollmentPeriod
       - durationPeriod
+  SprintActionType:
+    type: string
+    enum:
+      - close
+  SprintAction:
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/SprintActionType'
+      closeAction:
+        $ref: '#/definitions/SprintCloseAction'
+    required:
+      - type
+  SprintCloseAction:
+    type: object
