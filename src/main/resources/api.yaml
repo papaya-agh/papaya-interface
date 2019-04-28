@@ -439,6 +439,10 @@ definitions:
       initialCoefficient:
         type: number
         format: double
+      webhookUrl:
+        type: string
+      channelName:
+        type: string
     required:
       - name
       - description
