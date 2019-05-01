@@ -262,6 +262,42 @@ paths:
           schema:
             $ref: '#/definitions/SprintDto'
 
+  /projects/{projectId}/sprints/{sprintId}:
+    patch:
+      tags:
+        - projects
+        - sprints
+      summary: Requests a change to an existing sprint
+      operationId: modifySprint
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: projectId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the sprint
+        - in: body
+          name: request
+          description: Requested changes to the sprint
+          required: true
+          schema:
+            $ref: '#/definitions/SprintDto'
+      responses:
+        200:
+          description: Sprint modified succesfully
+          schema:
+            $ref: '#/definitions/SprintDto'
+
   /projects/{projectId}/sprints/{sprintId}/availability:
     get:
       tags:
