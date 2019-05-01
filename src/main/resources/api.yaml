@@ -119,6 +119,34 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SprintDto'
+    post:
+      tags:
+        - projects
+        - sprints
+      summary: Creates a new sprint in the specified project
+      operationId: addSprint
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: projectId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: body
+          name: request
+          description: Sprint creation parameters
+          required: true
+          schema:
+            $ref: '#/definitions/SprintDto'
+      responses:
+        201:
+          description: Sprint created succesfully
+          schema:
+            $ref: '#/definitions/SprintDto'
 definitions:
   LoginResult:
     type: object
