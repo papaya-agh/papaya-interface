@@ -87,7 +87,7 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
-  /projects/{id}/sprints:
+  /projects/{projectId}/sprints:
     get:
       tags:
         - projects
@@ -100,7 +100,7 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: id
+          name: projectId
           type: integer
           format: int64
           required: true
