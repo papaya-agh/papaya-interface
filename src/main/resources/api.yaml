@@ -420,11 +420,11 @@ definitions:
       - FINISHED
       - CLOSED
 
-  UserStatus:
+  UserRoleDto:
     type: string
     enum:
-      - admin
-      - member
+      - ADMIN
+      - MEMBER
 
   ProjectDto:
     type: object
@@ -443,6 +443,8 @@ definitions:
         type: string
       channelName:
         type: string
+      userRole:
+        $ref: '#/definitions/UserRoleDto'
     required:
       - name
       - description
