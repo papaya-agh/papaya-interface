@@ -431,6 +431,9 @@ definitions:
   LoginResult:
     type: object
     properties:
+      userId:
+        type: integer
+        format: int64
       valid:
         type: boolean
       token:
@@ -457,12 +460,6 @@ definitions:
       - IN_PROGRESS
       - FINISHED
       - CLOSED
-
-  UserRoleDto:
-    type: string
-    enum:
-      - ADMIN
-      - MEMBER
 
   ProjectDto:
     type: object
@@ -584,19 +581,6 @@ definitions:
     required:
       - timeAvailable
       - timeRemaining
-
-  UserDto:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
 
   SprintSummaryDto:
     type: object
