@@ -242,8 +242,7 @@ paths:
         200:
           description: Summary of requested sprint
           schema:
-            items:
-              $ref: '#/definitions/SprintSummaryDto'
+            $ref: '#/definitions/SprintSummaryDto'
 
 definitions:
   LoginResult:
