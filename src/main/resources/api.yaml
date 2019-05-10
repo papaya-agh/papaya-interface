@@ -389,10 +389,51 @@ paths:
           schema:
             $ref: '#/definitions/SprintSummaryDto'
 
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Obtains a user by id
+      operationId: getUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+          description: Numeric ID of the user
+      responses:
+        200:
+          description: Object representing user
+          schema:
+            $ref: '#/definitions/UserDto'
+
+  /me:
+    get:
+      tags:
+        - users
+      summary: Obtains authenticated user's information
+      operationId: getAuthenticatedUser
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object representing user
+          schema:
+            $ref: '#/definitions/UserDto'
+
+
 definitions:
   LoginResult:
     type: object
     properties:
+      userId:
+        type: integer
+        format: int64
       valid:
         type: boolean
       token:
@@ -420,12 +461,6 @@ definitions:
       - FINISHED
       - CLOSED
 
-  UserStatus:
-    type: string
-    enum:
-      - admin
-      - member
-
   ProjectDto:
     type: object
     properties:
@@ -439,6 +474,12 @@ definitions:
       initialCoefficient:
         type: number
         format: double
+      webhookUrl:
+        type: string
+      channelName:
+        type: string
+      userRole:
+        $ref: '#/definitions/UserRoleDto'
     required:
       - name
       - description
