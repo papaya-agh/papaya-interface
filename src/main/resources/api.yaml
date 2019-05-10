@@ -527,9 +527,6 @@ definitions:
   AvailabilityDto:
     type: object
     properties:
-      userId:
-        type: integer
-        format: int64
       timeAvailable:
         type: integer
         format: int64
@@ -550,7 +547,7 @@ definitions:
       membersAvailability:
         type: array
         items:
-          $ref: '#/definitions/AvailabilityDto'
+          $ref: '#/definitions/UserAvailabilityDto'
         description: List of members' availability for given sprint
       totalAvailableTime:
         type: integer
@@ -563,3 +560,14 @@ definitions:
       - membersAvailability
       - totalAvailableTime
       - sprintCoefficient
+
+  UserAvailabilityDto:
+    type: object
+    properties:
+      userId:
+        type: integer
+        format: int64
+      availability:
+        $ref: '#/definitions/AvailabilityDto'
+    required:
+      - userId
