@@ -5,29 +5,6 @@ info:
   version: 1.0.0
 
 paths:
-  /login:
-    post:
-      tags:
-        - login
-      summary: Requests login
-      operationId: requestLogin
-      requestBody:
-        description: The login request user data
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
-      responses:
-        200:
-          description: User successfully logged in
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResult'
-        400:
-          description: Validation error
-
   /projects:
     get:
       tags:
@@ -168,8 +145,7 @@ paths:
           description: User ID
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         204:
           description: User's role set successfully
@@ -193,8 +169,7 @@ paths:
           description: User ID
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         204:
           description: User removed successfully
@@ -400,16 +375,15 @@ paths:
     get:
       tags:
         - users
-      summary: Obtains a user by id
+      summary: Obtains a user by their ID
       operationId: getUser
       parameters:
         - in: path
           name: userId
           schema:
-            type: integer
-            format: int64
+            type: string
           required: true
-          description: Numeric ID of the user
+          description: ID of the user
       responses:
         200:
           description: Object representing user
@@ -435,29 +409,6 @@ paths:
 
 components:
   schemas:
-    LoginResult:
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-        valid:
-          type: boolean
-        token:
-          type: string
-        errorMessage:
-          type: string
-      required:
-        - valid
-
-    LoginRequest:
-      type: object
-      properties:
-        username:
-          type: string
-      required:
-        - username
-
     SprintStateDto:
       type: string
       enum:
@@ -557,8 +508,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
         firstName:
           type: string
         lastName:
@@ -576,8 +526,7 @@ components:
         email:
           type: string
         id:
-          type: integer
-          format: int64
+          type: string
 
     AvailabilityDto:
       type: object
@@ -638,8 +587,7 @@ components:
       type: object
       properties:
         userId:
-          type: integer
-          format: int64
+          type: string
         availability:
           $ref: '#/components/schemas/AvailabilityDto'
       required:
