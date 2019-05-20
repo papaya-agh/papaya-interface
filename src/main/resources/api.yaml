@@ -89,6 +89,31 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
+
+    put:
+      tags:
+        - projects
+      summary: Updates a project by its ID
+      operationId: updateProject
+      requestBody:
+        required: true
+        description: Updated project settings
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Project updated successfully
+
   /projects/{projectId}/members:
     get:
       tags:
@@ -417,6 +442,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+
+    put:
+      tags:
+        - users
+      summary: Updates user with specified id
+      operationId: updateUser
+      requestBody:
+        required: true
+        description: Updated user information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user
+      responses:
+        204:
+          description: User updated successfully
 
   /me:
     get:
