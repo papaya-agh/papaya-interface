@@ -522,10 +522,17 @@ components:
           description: The amount of time burned throughout the sprint (in minutes)
           type: integer
           format: int64
-        timePlanned:
-          description: The amount of time planned for the sprint (in minutes)
+        estimatedTimePlanned:
+          description: The amount of time initially planned for the sprint (in minutes)
           type: integer
           format: int64
+        finalTimePlanned:
+          description: The amount of actual time planned for the sprint (in minutes)
+          type: integer
+          format: int64
+        coefficient:
+          type: number
+          format: double
         sprintState:
           $ref: '#/components/schemas/SprintStateDto'
       required:
@@ -579,6 +586,10 @@ components:
           type: integer
           format: int64
           description: In minutes
+        effectiveTimeAvailable:
+          type: integer
+          format: int64
+          description: In minutes
         timeRemaining:
           type: integer
           format: int64
@@ -592,22 +603,36 @@ components:
     SprintSummaryDto:
       type: object
       properties:
+        sprint:
+          $ref: '#/components/schemas/SprintDto'
         membersAvailability:
           type: array
           items:
             $ref: '#/components/schemas/UserAvailabilityDto'
           description: List of members' availability for given sprint
-        totalAvailableTime:
+        prevAverageSprintCoefficient:
+          type: number
+          format: double
+        currentAverageSprintCoefficient:
+          type: number
+          format: double
+        timeToAssign:
           type: integer
           format: int64
           description: In minutes
-        sprintCoefficient:
-          type: number
-          format: double
+        totalDeclaredTime:
+          type: integer
+          format: int64
+          description: In minutes
+        totalNeededTime:
+          type: integer
+          format: int64
+          description: In minutes
       required:
+        - sprint
         - membersAvailability
-        - totalAvailableTime
-        - sprintCoefficient
+        - prevAverageSprintCoefficient
+        - totalDeclaredTime
 
     UserAvailabilityDto:
       type: object
