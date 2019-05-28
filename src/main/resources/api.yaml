@@ -181,7 +181,7 @@ paths:
       tags:
         - projects
         - sprints
-      summary: Obtains sprints from a project by their state
+      summary: Obtains the first sprint with a specified state from a project
       operationId: getSprints
       parameters:
         - in: path
@@ -198,16 +198,31 @@ paths:
             items:
               $ref: '#/components/schemas/SprintStateDto'
           required: false
-          description: The queried states - in case of an empty array all sprints are returned
+          description: The queried states - in case of an empty array all states will be considered
+        - in: query
+          name: direction
+          schema:
+            $ref: '#/components/schemas/SortingDirection'
+          required: false
+          description: Sorting direction
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int64
+          required: false
+          description: Number of returned records
       responses:
         200:
-          description: List of sprints with the requested state
+          description: First sprint with the specified state
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/SprintDto'
+        404:
+          description: No sprints were found within the project for the specified states
 
     post:
       tags:
@@ -238,7 +253,86 @@ paths:
               schema:
                 $ref: '#/components/schemas/SprintDto'
 
-  /projects/{projectId}/sprints/{sprintId}:
+  /projects/{projectId}/sprints/{sprintId}/next:
+    get:
+      tags:
+        - projects
+        - sprints
+      summary: Obtains the next sprint with a specified state from a project
+      operationId: getNextSprint
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the currently considered sprint
+        - in: query
+          name: sprintStates
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SprintStateDto'
+          required: false
+          description: The queried states - in case of an empty array all states will be considered
+      responses:
+        200:
+          description: The sprint following the current one
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SprintDto'
+        404:
+          description: No such sprint was found within the project
+
+  /projects/{projectId}/sprints/{sprintId}/prev:
+    get:
+      tags:
+        - projects
+        - sprints
+      summary: Obtains the previous sprint with a specified state from a project
+      operationId: getPreviousSprint
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the currently considered sprint
+        - in: query
+          name: sprintStates
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SprintStateDto'
+          required: false
+          description: The queried states - in case of an empty array all states will be considered
+      responses:
+        200:
+          description: The sprint preceding the current one
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SprintDto'
+        404:
+          description: No such sprint was found within the project
+
     patch:
       tags:
         - projects
@@ -551,32 +645,64 @@ components:
 
     SprintSummaryDto:
       type: object
+      description: >
+        [L3] SprintDto#startDate
+
+
+        [L4] SprintDto#endDate
+
+
+        [L20] SprintDto#estimatedTimePlanned
+
+
+        [L21] SprintDto#finalTimePlanned
+
+
+        [L22] SprintDto#timeBurned
+
+
+        [L25] SprintDto#coefficient = SprintDto#totalDeclaredTime / SprintDto#timeBurned
       properties:
         sprint:
           $ref: '#/components/schemas/SprintDto'
         membersAvailability:
+          description: >
+            List of members' availability for a given sprint
+
+
+            [L6-L12] Found in UserAvailabilityDto#AvailabilityDto#timeAvailable; in minutes
+
+
+            [L13-L19] Found in UserAvailabilityDto#AvailabilityDto#effectiveTimeAvailable; in minutes
           type: array
           items:
             $ref: '#/components/schemas/UserAvailabilityDto'
-          description: List of members' availability for given sprint
         prevAverageSprintCoefficient:
+          description: >
+            [L2] Average of past SprintDto#coefficient values (not including the sprint in question)
           type: number
           format: double
         currentAverageSprintCoefficient:
+          description: >
+            [L26] Average of SprintDto#coefficient values (including the sprint in question)
           type: number
           format: double
         timeToAssign:
+          description: >
+            [L5] Equal to totalDeclaredTime / prevAverageSprintCoefficient; in minutes
           type: integer
           format: int64
-          description: In minutes
         totalDeclaredTime:
+          description: >
+            [L23] Equal to the sum of UserAvailabilityDto#AvailabilityDto#timeAvailable (found in membersAvailability);
+            in minutes
           type: integer
           format: int64
-          description: In minutes
         totalNeededTime:
+          description: >
+            [L24] Equal to SprintDto#coefficient * SprintDtp#finalTimePlanned; in minutes
           type: integer
           format: int64
-          description: In minutes
       required:
         - sprint
         - membersAvailability
@@ -592,3 +718,10 @@ components:
           $ref: '#/components/schemas/AvailabilityDto'
       required:
         - userId
+
+    SortingDirection:
+      type: object
+      enum:
+        - DESC
+        - ASC
+
