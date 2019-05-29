@@ -66,6 +66,7 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
+
   /projects/{projectId}/members:
     get:
       tags:
@@ -91,6 +92,7 @@ paths:
                   $ref: '#/components/schemas/ProjectMemberDto'
         404:
           description: Project not found
+
     post:
       tags:
         - projects
@@ -151,6 +153,7 @@ paths:
           description: User's role set successfully
         404:
           description: Project not found
+
     delete:
       tags:
         - projects
@@ -333,6 +336,7 @@ paths:
         404:
           description: No such sprint was found within the project
 
+  /projects/{projectId}/sprints/{sprintId}:
     patch:
       tags:
         - projects
