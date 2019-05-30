@@ -5,6 +5,20 @@ info:
   version: 1.0.0
 
 paths:
+  /jira/key:
+    get:
+      tags:
+        - jira
+      summary: Retrieves a public key for Jira integration
+      operationId: getJiraKey
+      responses:
+        200:
+          description: Jira public key retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JiraConfigDto'
+
   /projects:
     get:
       tags:
@@ -66,6 +80,105 @@ paths:
           description: User is not authorized
         404:
           description: Project not found
+
+  /projects/{projectId}/jira/config:
+    get:
+      tags:
+        - projects
+        - jira
+      summary: Retrieves a link for Jira authorization
+      operationId: getJiraAuthorizationLink
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Jira authorization link retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JiraConfigDto'
+
+  /projects/{projectId}/jira/secret:
+    put:
+      tags:
+        - projects
+        - sprints
+      summary: Sets Jira authorization secret
+      operationId: setJiraSecret
+      requestBody:
+        description: Jira authorization secret
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JiraConfigDto'
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Jira authorization secret set correctly
+
+  /projects/{projectId}/jira/projects:
+    get:
+      tags:
+        - projects
+        - jira
+      summary: Retrieves a list of available Jira boards
+      operationId: getJiraBoards
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Available Jira boards retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JiraBoardDto'
+
+    put:
+      tags:
+        - projects
+        - sprints
+      summary: Sets Jira board selected for linking with current project
+      operationId: setJiraBoard
+      requestBody:
+        description: Selected Jira board
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JiraBoardDto'
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Jira board set correctly
 
   /projects/{projectId}/members:
     get:
@@ -444,8 +557,45 @@ paths:
       tags:
         - projects
         - sprints
-      summary: Retrives a list of project members with their availability and calculated coefficients for given sprint
+      summary: Retrieves a list of project members with their availability and calculated coefficients for given sprint
       operationId: getSprintSummary
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: path
+          name: sprintId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the sprint
+        - in: query
+          name: jiraSprintId
+          description: Jira sprint id for the information to be synchronized with
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Summary of requested sprint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SprintSummaryDto'
+
+  /projects/{projectId}/sprints/{sprintId}/jira/sprints:
+    get:
+      tags:
+        - projects
+        - sprints
+      summary: Retrieves a list of Jira sprints
+      operationId: getAvailableJiraSprints
       parameters:
         - in: path
           name: projectId
@@ -463,11 +613,13 @@ paths:
           description: Numeric ID of the sprint
       responses:
         200:
-          description: Summary of requested sprint
+          description: List of available Jira sprints
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SprintSummaryDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/JiraSprintDto'
 
   /users/{userId}:
     get:
@@ -534,12 +686,17 @@ components:
           type: string
         channelName:
           type: string
+        jiraUrl:
+          type: string
+        jiraBoard:
+          $ref: '#/components/schemas/JiraBoardDto'
         userRole:
           $ref: '#/components/schemas/UserRoleDto'
       required:
         - name
         - description
         - initialCoefficient
+        - jiraUrl
 
     LocalDateTimePeriodDto:
       type: object
@@ -729,3 +886,50 @@ components:
         - DESC
         - ASC
 
+    JiraConfigDto:
+      type: object
+      properties:
+        key:
+          type: string
+        url:
+          type: string
+        secret:
+          type: string
+
+    JiraSprintDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        state:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+
+    JiraBoardDto:
+      type: object
+      properties:
+        boardId:
+          type: integer
+          format: int64
+        boardName:
+          type: string
+        boardType:
+          type: string
+        projectId:
+          type: integer
+          format: int64
+        projectKey:
+          type: string
+        projectName:
+          type: string
+      required:
+        - boardId
+        - projectId
