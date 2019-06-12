@@ -717,6 +717,10 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
+        notificationMessage:
+          type: string
         enrollmentPeriod:
           $ref: '#/components/schemas/LocalDateTimePeriodDto'
         durationPeriod:
