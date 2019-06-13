@@ -108,7 +108,7 @@ paths:
     put:
       tags:
         - projects
-        - sprints
+        - jira
       summary: Sets Jira authorization secret
       operationId: setJiraSecret
       requestBody:
@@ -158,7 +158,7 @@ paths:
     put:
       tags:
         - projects
-        - sprints
+        - jira
       summary: Sets Jira board selected for linking with current project
       operationId: setJiraBoard
       requestBody:
@@ -184,6 +184,7 @@ paths:
     get:
       tags:
         - projects
+        - users
       summary: Retrieves users belonging to the project
       operationId: getUsersFromProject
       parameters:
@@ -209,6 +210,7 @@ paths:
     post:
       tags:
         - projects
+        - users
       summary: Adds a user to the project
       operationId: addUserToProject
       requestBody:
@@ -238,6 +240,7 @@ paths:
     put:
       tags:
         - projects
+        - users
       summary: Sets user's role in the project
       operationId: setUserRole
       requestBody:
@@ -270,6 +273,7 @@ paths:
     delete:
       tags:
         - projects
+        - users
       summary: Removes the user from the project
       operationId: removeUserFromProject
       parameters:
@@ -486,11 +490,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/SprintDto'
 
+    delete:
+      tags:
+        - projects
+        - sprints
+      summary: Removes the sprint from the project
+      operationId: removeSprint
+      parameters:
+        - in: path
+          name: projectId
+          description: Project ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: sprintId
+          description: Sprint ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Sprint removed successfully
+        404:
+          description: Not found
+
   /projects/{projectId}/sprints/{sprintId}/availability:
     get:
       tags:
         - projects
         - sprints
+        - availability
       summary: Obtains user's availability for specified sprint in specified project
       operationId: getUserAvailability
       parameters:
@@ -520,6 +552,7 @@ paths:
       tags:
         - projects
         - sprints
+        - availability
       summary: Updates user's availability for specified sprint in specified project
       operationId: updateUserAvailability
       requestBody:
@@ -557,6 +590,7 @@ paths:
       tags:
         - projects
         - sprints
+        - summary
       summary: Retrieves a list of project members with their availability and calculated coefficients for given sprint
       operationId: getSprintSummary
       parameters:
@@ -594,6 +628,7 @@ paths:
       tags:
         - projects
         - sprints
+        - jira
       summary: Retrieves a list of Jira sprints
       operationId: getAvailableJiraSprints
       parameters:
