@@ -41,12 +41,12 @@ paths:
       summary: Creates a new project
       operationId: addProject
       requestBody:
-          description: The project
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectDto'
+        description: The project
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDto'
       responses:
         201:
           description: Project created successfully
@@ -295,6 +295,42 @@ paths:
           description: User removed successfully
         404:
           description: Project not found
+
+  /projects/{projectId}/coefficient-graph:
+    get:
+      summary: Obtains the coefficient graph data
+      operationId: getCoefficientGraph
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the project
+        - in: query
+          name: from
+          schema:
+            type: integer
+            format: int64
+          required: false
+          description: The lower bound of the graph data, inclusive
+        - in: query
+          name: to
+          schema:
+            type: integer
+            format: int64
+          required: false
+          description: The upper bound of the graph data, inclusive
+      responses:
+        200:
+          description: The coefficient graph data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoefficientGraphDto'
+        404:
+          description: No project was found with the given ID
 
   /projects/{projectId}/sprints:
     get:
@@ -561,7 +597,7 @@ paths:
         content:
           application/json:
             schema:
-             $ref: '#/components/schemas/AvailabilityDto'
+              $ref: '#/components/schemas/AvailabilityDto'
       parameters:
         - in: path
           name: projectId
@@ -972,3 +1008,24 @@ components:
       required:
         - boardId
         - projectId
+
+    CoefficientGraphDto:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoefficientGraphPointDto'
+
+    CoefficientGraphPointDto:
+      type: object
+      properties:
+        time:
+          type: integer
+          format: int64
+        coefficient:
+          type: number
+          format: double
+        averageCoefficient:
+          type: number
+          format: double
